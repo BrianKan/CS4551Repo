@@ -65,9 +65,9 @@ public class CS4551_Kan
       
       img2 = new Image(args[0]); // Error Diffusion
       img2.convertGrayscale();
-      img2.printImageValues();
+      img2.displayPixelValue(95, 164);
       img2.convertErrorDiffusion(choice);
-      img2.printImageValues();
+      img2.displayPixelValue(95, 164);
       img2.display();
       img2.write2PPM(imageName+"-errorDiffusion-"+choice+"level.ppm");
 

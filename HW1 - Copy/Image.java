@@ -326,20 +326,35 @@ public class Image
 		// Current(i,j) Right(i+1,j) BottomLeft(i-1,j+1) Bottom(i,j+1) BottomRight(i+1,j+1)
 		int[] irgb=new int[3];
 		int newColor=0;
-		double error=0;
+		int result=0;
 		for(int j=0; j<getH();j++){
 			for(int i=0;i<getW();i++){
 				this.getPixel(i,j,irgb);
 			   
+				switch(nlevel){
+					//BI LEVEL
+					case 2: // Bi-level
 					 if(irgb[0]>=128){
 						 newColor=255;
 					 }
 					 else{
 						 newColor=0;
 					 }
-					 error=irgb[0]-newColor;
+					 result=irgb[0]-newColor;
 				  
-					 floydSteingburgDiffusion(i, j, error);
+					 floydSteingburgDiffusion(i, j, result);
+					break;
+					//QUAD LEVEL
+					case 4: // Quad-level
+					newColor=(irgb[0]/64)*85;
+					break;
+					// OCTA LEVEL
+					case 8: //Octa-level
+					newColor=(irgb[0]/32)*36;
+					break;
+					case 16: //Hexa-level
+					newColor=(irgb[0]/16)*17;
+					break;
 				}
 
 				// irgb[0]=newColor;
@@ -348,41 +363,38 @@ public class Image
 
 				// this.setPixel(i,j,irgb);
 				}
-		
+			}
 	}
 
 	public void printImageValues(){
-		int displayArray[] = new int[3];
-		for(int j=100;j<120;j++){
-			for(int i=100;i<120;i++){
-				this.getPixel(i,j,displayArray);
-				System.out.print(displayArray[0]+" ");
+		for(int j=0;j<getH();j++){
+			for(int i=0;i<getW();i++){
+				displayPixelValue(i, j);
 			}
-			System.out.println("Row "+j+":");
 		}
-		System.out.println("Finished 1 Cycle");
 	}
 
-	public void floydSteingburgDiffusion(int i,int j,double error){
+	public void floydSteingburgDiffusion(int i,int j,int error){
 		int tempArray[] = new int[3];
 		if(i+1<getW()){ 					// Right (i+1,j)
 			this.getPixel(i+1,j,tempArray);
-			tempArray[0]=tempArray[0]+error*(7/16);
+			tempArray[0]+=(7/16)*error;
 			this.setPixel(i+1,j,tempArray);
 		 }
 		 if(i-1>=0&&j+1<getH()){  			 // Bottom Left (i-1,j+1)
+			
 			this.getPixel(i-1,j+1,tempArray);
-			tempArray[0]=tempArray[0]+error*(3/16);
+			tempArray[0]+=(3/16)*error;
 			this.setPixel(i-1,j+1,tempArray);
 		 }
 		 if(j+1<getH()){ 					// Bottom (i,j+1)
 			this.getPixel(i,j+1,tempArray);
-			tempArray[0]=tempArray[0]+error*(5/16);
+			tempArray[0]+=(5/16)*error;
 			this.setPixel(i,j+1,tempArray);
 		 }
 		 if(i+1<getW()&&j+1<getH()){				 //BottomRight(i+1,j+1)
 			this.getPixel(i+1,j+1,tempArray);
-			tempArray[0]=tempArray[0]+error*(1/16);
+			tempArray[0]+=(1/16)*error;
 			this.setPixel(i+1,j+1,tempArray);
 		 }
 	}
