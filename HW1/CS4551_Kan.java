@@ -57,19 +57,17 @@ public class CS4551_Kan
         choice= input.nextInt();
       }
 
-      // img = new Image(args[0]); // Thresholding 
-      // img.convertGrayscale();
-      // img.convertThresholding(choice);
-      // img.display();
-      // img.write2PPM(imageName+"-threshholding-"+choice+"level.ppm");
+      img = new Image(args[0]); // Thresholding 
+      img.convertGrayscale();
+      img.convertThresholding(choice);
+      img.display();
+      img.write2PPM(imageName+"-threshholding-"+choice+"level.ppm");
       
       img2 = new Image(args[0]); // Error Diffusion
       img2.convertGrayscale();
-      img2.printImageValues();
       img2.convertErrorDiffusion(choice);
-      img2.printImageValues();
       img2.display();
-      img2.write2PPM(imageName+"-errorDiffusion-"+choice+"level.ppm");
+      img2.write2PPM(imageName+"-errordiffusion-"+choice+"level.ppm");
 
       break;
 
