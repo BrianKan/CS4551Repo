@@ -306,7 +306,7 @@ public class Image
 					break;
 					// OCTA LEVEL
 					case 8: //Octa-level
-					newColor=(irgb[0]/32)*36;
+					newColor=(int)((irgb[0]/32)*36.428);
 					break;
 					case 16: //Hexa-level
 					newColor=(irgb[0]/16)*17;
@@ -322,23 +322,24 @@ public class Image
 			}
 		}
 
+
 	public void convertErrorDiffusion(int nlevel){
 		// Current(i,j) Right(i+1,j) BottomLeft(i-1,j+1) Bottom(i,j+1) BottomRight(i+1,j+1)
 		int[] irgb=new int[3];
 		int newColor=0;
-		int error=0;
-		for(int j=0; j<getH();j++){
-			for(int i=0;i<getW();i++){
+		double error=0;
+		for(int j=0; j<getH();++j){
+			for(int i=0;i<getW();++i){
 				this.getPixel(i,j,irgb);
-
+				//System.out.println(i+" "+j+" "+irgb[0]);
 				switch(nlevel){
 					//BI LEVEL
 					case 2: // Bi-level
-					 if(irgb[0]>=128){
-						 newColor=255;
+					 if(irgb[0]<128){
+						 newColor=0;
 					 }
 					 else{
-						 newColor=0;
+						 newColor=255;
 					 }
 					error=irgb[0]-newColor;
 					floydSteingburgDiffusion(i, j, error);
@@ -351,8 +352,15 @@ public class Image
 					break;
 
 					case 8: //Octa-level
-					newColor=(irgb[0]/32)*36;
+					newColor=(int)((irgb[0]/32)*36.5);
+					if(newColor>255){
+						newColor=255;
+					}
+			
 					error=irgb[0]-newColor;
+					// if(i%2==1){
+					// 	System.out.println(error+" "+irgb[0]+" "+newColor);
+					// }
 					floydSteingburgDiffusion(i, j, error);
 					break;
 
@@ -362,11 +370,13 @@ public class Image
 					floydSteingburgDiffusion(i, j, error);
 					break;
 				}
+
 				irgb[0]=newColor;
 				irgb[1]=newColor;
 				irgb[2]=newColor;
 
 				this.setPixel(i,j,irgb);
+
 				}
 			}
 		
@@ -376,23 +386,27 @@ public class Image
 	public void floydSteingburgDiffusion(int i,int j,double error){
 		int tempArray[] = new int[3];
 		if(i+1<getW()){ 					// Right (i+1,j)
+			tempArray=new int[3];
 			this.getPixel(i+1,j,tempArray);
-			tempArray[0]=(int)(tempArray[0]+error*(7.0/16.0));
+			tempArray[0]=(int)(tempArray[0]+(error*(7.0/16.0)));
 			this.setPixel(i+1,j,tempArray);
 		 }
 		 if(i-1>=0&&j+1<getH()){  			 // Bottom Left (i-1,j+1)
+			tempArray=new int[3];
 			this.getPixel(i-1,j+1,tempArray);
-			tempArray[0]=(int)(tempArray[0]+error*(3.0/16.0));
+			tempArray[0]=(int)(tempArray[0]+(error*(3.0/16.0)));
 			this.setPixel(i-1,j+1,tempArray);
 		 }
 		 if(j+1<getH()){ 					// Bottom (i,j+1)
+			tempArray=new int[3];
 			this.getPixel(i,j+1,tempArray);
-			tempArray[0]=(int)(tempArray[0]+error*(5.0/16.0));
+			tempArray[0]=(int)(tempArray[0]+(error*(5.0/16.0)));
 			this.setPixel(i,j+1,tempArray);
 		 }
 		 if(i+1<getW()&&j+1<getH()){				 //BottomRight(i+1,j+1)
+			tempArray=new int[3];
 			this.getPixel(i+1,j+1,tempArray);
-			tempArray[0]=(int)(tempArray[0]+error*(1.0/16.0));
+			tempArray[0]=(int)(tempArray[0]+(error*(1.0/16.0)));
 			this.setPixel(i+1,j+1,tempArray);
 		 }
 	}
