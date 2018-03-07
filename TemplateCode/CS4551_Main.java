@@ -22,7 +22,6 @@ public class CS4551_Main
     // Create an Image object with the input PPM file name.
     // Display it and write it into another PPM file.
     Image img = new Image(args[0]);
-	img.convertRedscale();
     img.display();
     img.write2PPM("out.ppm");
 

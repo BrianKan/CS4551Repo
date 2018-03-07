@@ -36,18 +36,7 @@ public class Image
 	  readPPM(fileName);
 	  System.out.println("Created an image from " + fileName+ " with size "+getW()+"x"+getH());
   }
-  
-  public void convertRedscale(){
-	int[] irgb=new int[3];
-    for(int i=0; i<getW();i++){
-		for(int j=0;j<getH();j++){
-			this.getPixel(i,j,irgb);
-			irgb[1]=irgb[0];
-			irgb[2]=irgb[0];
-			this.setPixel(i,j,irgb);
-			}
-		}
-	}
+
   public int getW()
   {
 	return img.getWidth();
